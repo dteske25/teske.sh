@@ -1,0 +1,24 @@
+:root { font-family: Inter, 'Segoe UI', sans-serif; color: #e8ebe5; background: #111512; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+body::before { content: ''; position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 85% 45%, #a6cf7220, transparent 50%); }
+.page { position: relative; width: min(1440px, 100%); min-height: 100svh; margin: auto; padding: 36px 6%; display: flex; flex-direction: column; }
+header, footer { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.wordmark { color: inherit; text-decoration: none; font-size: 24px; font-weight: 650; letter-spacing: -1px; }
+.wordmark span { color: #b9dc91; }
+a:focus-visible { outline: 2px solid #b9dc91; outline-offset: 8px; }
+.status { display: flex; align-items: center; gap: 9px; color: #bdc5b9; font-size: 12px; }
+.status > span { width: 6px; height: 6px; background: #b9dc91; border-radius: 50%; }
+main { flex: 1; padding: 100px 0 92px; }
+.eyebrow { color: #b9dc91; font: 11px ui-monospace, Consolas, monospace; letter-spacing: 3px; margin: 0 0 30px; }
+h1 { font-size: clamp(80px, 12vw, 168px); line-height: .96; letter-spacing: -.075em; font-weight: 500; margin: 0 0 35px; }
+h1 > span:first-of-type { color: #b9dc91; }
+.cursor { color: #b9dc91; font-weight: 300; margin-left: .08em; }
+.intro { color: #a8b0a5; font-size: clamp(16px, 2vw, 19px); line-height: 1.7; margin: 0 0 45px; }
+.terminal { display: inline-block; padding: 16px 20px; border: 1px solid #343e31; border-radius: 6px; color: #c9d0c3; font: 12px/1.6 ui-monospace, Consolas, monospace; }
+.terminal > span:first-child { color: #b9dc91; }
+.prompt { color: #788a70; padding: 0 8px; }
+.command { color: #9ca895; }
+footer { border-top: 1px solid #30382c; padding-top: 24px; color: #a1ac99; font: 11px ui-monospace, Consolas, monospace; }
+footer span span { color: #b9dc91; margin-left: 12px; }
+@media (max-width: 600px) { .page { padding: 26px 7%; } main { padding: 100px 0 80px; } .terminal { font-size: 10px; padding: 13px; } h1 { margin-bottom: 30px; } }
