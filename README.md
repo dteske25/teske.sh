@@ -15,7 +15,9 @@ npm run dev
 
 ## Deploy with Cloudflare Workers
 
-Connect `dteske25/teske.sh` in Cloudflare Workers & Pages and create a Worker with:
+The site is deployed as the `teske-sh` Worker at https://teske.sh.
+
+To enable automatic deployments from GitHub, connect `dteske25/teske.sh` to the existing Worker with:
 
 - Production branch: `main`
 - Root directory: repository root
@@ -24,9 +26,9 @@ Connect `dteske25/teske.sh` in Cloudflare Workers & Pages and create a Worker wi
 
 The checked-in `wrangler.jsonc` serves `dist/` as static assets with SPA fallback. No server entry point or runtime secrets are needed.
 
-After deploying, add `teske.sh` under the Worker's Settings → Domains & Routes as a Custom domain. The zone must be in the same Cloudflare account.
+The checked-in route `teske.sh/*` sends requests to this Worker. The existing apex A record is proxied through Cloudflare; keep proxying enabled for the route to work. Email DNS records are unchanged.
 
-For manual deployment, run `npx wrangler login` once, then `npm run deploy`.
+For manual deployment, run `npx wrangler login` once, then `npm run deploy`. The initial production deployment was made through Wrangler; automatic GitHub deployments are not configured.
 
 If using Cloudflare Pages instead, choose build command `npm run build` and output directory `dist`. Pages handles SPA fallback when no top-level `404.html` exists. Add `teske.sh` in the project's Custom domains settings.
 
