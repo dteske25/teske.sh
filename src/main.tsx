@@ -7,9 +7,9 @@ function App() {
     <div className="page">
       <header><a className="wordmark" href="/" aria-label="teske.sh home">teske<span>.sh</span></a><span className="status"><span aria-hidden="true" />In the works</span></header>
       <main>
-        <p className="eyebrow">A NEW CHAPTER</p>
+        <p className="eyebrow">SOFTWARE CONSULTING</p>
         <h1>Coming<br /><span>soon.</span><span className="cursor" aria-hidden="true">_</span></h1>
-        <p className="intro">A new home on the web.<br />A little more time, and a lot more to come.</p>
+        <p className="intro">Thoughtful software. Practical solutions.<br />A new home for software consulting is on its way.</p>
         <div className="terminal" aria-hidden="true"><span>~</span> teske.sh <span className="prompt">$</span> <span className="command">building what's next</span></div>
       </main>
       <footer><span>teske.sh</span><span>See you soon <span aria-hidden="true">↗</span></span></footer>
