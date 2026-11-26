@@ -19,7 +19,7 @@ Open the local Worker URL for the full flow. To test the portal, add `LOCAL_ADMI
 
 Cloudflare Workers Builds deploys the `teske-sh` Worker from `main`. Prepare the production resources before merging this change.
 
-1. Create a D1 database named `teske-sh-intake`, then replace the local placeholder database ID in `wrangler.jsonc` with the production ID. Apply `npx wrangler d1 migrations apply DB --remote` after the binding points to that database.
+1. The `DB` binding in `wrangler.jsonc` points to the production `teske-sh-intake` database. Before production deploys with schema changes, run `npx wrangler d1 migrations apply DB --remote`. GitHub checks the build and Worker bundle on pull requests.
 2. Create one Cloudflare Access self-hosted application that protects both `teske.sh/admin` and `teske.sh/api/admin`, including their subpaths. Restrict the allow policy to the intended administrator account. Keep the homepage and `/api/inquiries` public.
 3. Set the Worker variables `ACCESS_ISSUER` to your Cloudflare Access team origin (for example, `https://your-team.cloudflareaccess.com`) and `ACCESS_AUDIENCE` to that application’s audience tag. The Worker verifies the signed Access token for both portal pages and private API calls. Retain these variables across deploys. Do not set `LOCAL_ADMIN_PASSWORD` in production.
 4. After deploy, confirm a signed-out visitor can submit an inquiry and is challenged on `/admin`. Confirm an authorized administrator can see the inquiry and update its project status.

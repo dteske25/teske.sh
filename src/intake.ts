@@ -1,9 +1,9 @@
 export const projectTypes = [
+  'Custom website',
   'Web or mobile app',
   'Internal tool or dashboard',
   'Workflow automation or integration',
   'Improve existing software',
-  'Website with custom features',
   'Other or still figuring it out',
 ] as const
 

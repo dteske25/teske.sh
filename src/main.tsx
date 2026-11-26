@@ -86,12 +86,12 @@ function App() {
         <main className="landing">
           <section aria-labelledby="landing-title">
             <p className="eyebrow">SOFTWARE CONSULTING</p>
-            <h1 id="landing-title">Custom software for <span>real work.</span></h1>
-            <p className="intro">I’m Daric Teske. I build web and mobile apps, internal tools, and integrations for businesses that need a better way to work or a new product to launch.</p>
+            <h1 id="landing-title">Custom websites, apps, and <span>business software.</span></h1>
+            <p className="intro">I’m Daric Teske. I help businesses build a website, launch a product, or simplify how their team works.</p>
             <ul className="examples">
-              <li>Give customers an app to book, buy, or track their work</li>
-              <li>Replace a shared spreadsheet with a tool built for your team</li>
-              <li>Connect the systems you already use and cut out manual steps</li>
+              <li><div><strong>Custom websites</strong><p>Launch a new business site, redesign an existing one, or get help keeping it up to date.</p></div></li>
+              <li><div><strong>Web and mobile apps</strong><p>Give customers an app to book, buy, or track their work.</p></div></li>
+              <li><div><strong>Internal tools and integrations</strong><p>Replace spreadsheets, connect your systems, and reduce manual work.</p></div></li>
             </ul>
           </section>
           <IntakeForm />
