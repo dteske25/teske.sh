@@ -85,7 +85,7 @@ async function saveInquiry(request: Request, env: Env) {
   const projectType = field(body, 'projectType', 80)
   const goal = field(body, 'goal', 3000)
   const timing = field(body, 'timing', 40)
-  const budget = field(body, 'budget', 40)
+  const budget = body.budget === undefined ? '' : field(body, 'budget', 40)
   if (!id || !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(id) || !name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || company === null ||
       !projectTypes.some(option => option === projectType) || !goal ||
       !(timing === '' || timings.some(option => option === timing)) ||

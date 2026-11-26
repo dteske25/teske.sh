@@ -2,7 +2,7 @@ import { StrictMode, useState } from 'react'
 import type { FormEvent } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Admin } from './admin'
-import { budgets, projectTypes, timings } from './intake'
+import { projectTypes, timings } from './intake'
 import './index.css'
 
 function IntakeForm() {
@@ -53,16 +53,10 @@ function IntakeForm() {
             <label className="full">What are you trying to accomplish?
               <textarea name="goal" maxLength={3000} required placeholder="What do you do today, who would use this, and what would you like to change?" />
             </label>
-            <label>Timing <span className="muted">(optional)</span>
+            <label className="full">Timing <span className="muted">(optional)</span>
               <select name="timing" defaultValue="">
                 <option value="">Select timing</option>
                 {timings.map(option => <option key={option}>{option}</option>)}
-              </select>
-            </label>
-            <label>Budget <span className="muted">(optional)</span>
-              <select name="budget" defaultValue="">
-                <option value="">Select a range</option>
-                {budgets.map(option => <option key={option}>{option}</option>)}
               </select>
             </label>
             <div className="trap" aria-hidden="true">
