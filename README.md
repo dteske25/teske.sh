@@ -25,3 +25,13 @@ Cloudflare Workers Builds deploys the `teske-sh` Worker from `main`. Prepare the
 4. After deploy, confirm a signed-out visitor can submit an inquiry and is challenged on `/admin`. Confirm an authorized administrator can see the inquiry and update its project status.
 
 The Worker uses the existing proxied `teske.sh/*` route. Lead intake is stored and reviewed in the portal. Email alerts are a separate integration.
+
+## Pull request previews
+
+Cloudflare Workers Builds runs `npx wrangler preview` for non-production branches. The previews bind to `teske-sh-intake-preview`; apply schema changes there before running a Preview. To target that database explicitly, run from the repository root:
+
+```sh
+npx wrangler d1 migrations apply teske-sh-intake-preview --config wrangler.preview-migrations.jsonc --remote
+```
+
+Use sample inquiry details in previews. Production sign-in settings are configured separately, so preview deployments leave the admin portal closed unless Preview-specific access is set up.

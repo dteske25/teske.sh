@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "teske-sh",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "teske-sh-intake-preview",
+      "database_id": "1e6ca14b-bff0-4775-9cc5-5ad7385d1c87"
+    }
+  ]
+}
