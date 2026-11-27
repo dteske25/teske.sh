@@ -36,5 +36,15 @@
         "database_id": "1e6ca14b-bff0-4775-9cc5-5ad7385d1c87"
       }
     ]
+  },
+  "send_email": [
+    {
+      "name": "INQUIRY_EMAIL",
+      "destination_address": "info@teske.sh"
+    }
+  ],
+  "vars": {
+    "ACCESS_ISSUER": "https://dteske.cloudflareaccess.com",
+    "ACCESS_AUDIENCE": "799ac96b6b0732f4ab79f92e93969ca5b3f1fdbfb775a4bcd6f6400eb971486a"
   }
 }

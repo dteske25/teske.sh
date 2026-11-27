@@ -5,6 +5,7 @@ import type { Inquiry } from '../src/intake'
 interface Env {
   ASSETS: Fetcher
   DB: D1Database
+  INQUIRY_EMAIL?: SendEmail
   ACCESS_ISSUER?: string
   ACCESS_AUDIENCE?: string
   LOCAL_ADMIN_PASSWORD?: string
@@ -15,6 +16,8 @@ const json = (data: unknown, status = 200) => Response.json(data, {
   headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' },
 })
 const error = (message: string, status: number) => json({ message }, status)
+const inquiryRecipient = 'info@teske.sh'
+const inquirySender = 'leads@alerts.teske.sh'
 const keys = new Map<string, ReturnType<typeof createRemoteJWKSet>>()
 
 async function isAdmin(request: Request, env: Env, url: URL) {
@@ -73,7 +76,24 @@ function field(body: Record<string, unknown>, key: string, max: number) {
   return typeof value === 'string' && value.length <= max ? value.trim() : null
 }
 
-async function saveInquiry(request: Request, env: Env) {
+async function sendInquiryAlert(binding: SendEmail, projectType: string) {
+  try {
+    await binding.send({
+      from: { email: inquirySender, name: 'Teske.sh' },
+      to: inquiryRecipient,
+      subject: 'New Teske.sh inquiry',
+      text: `A new inquiry was submitted.
+
+Project type: ${projectType}
+
+View the inquiry: https://teske.sh/admin`,
+    })
+  } catch (error) {
+    console.error('Inquiry alert delivery failed', error instanceof Error ? error.name : 'Unknown error')
+  }
+}
+
+async function saveInquiry(request: Request, env: Env, context: ExecutionContext) {
   const body = await readBody(request)
   if (!body) return error('The inquiry could not be read.', 400)
   if (typeof body.website === 'string' && body.website.trim()) return json({}, 201)
@@ -87,18 +107,21 @@ async function saveInquiry(request: Request, env: Env) {
   const timing = field(body, 'timing', 40)
   const budget = body.budget === undefined ? '' : field(body, 'budget', 40)
   if (!id || !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(id) || !name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || company === null ||
-      !projectTypes.some(option => option === projectType) || !goal ||
+      !projectType || !projectTypes.some(option => option === projectType) || !goal ||
       !(timing === '' || timings.some(option => option === timing)) ||
       !(budget === '' || budgets.some(option => option === budget))) {
     return error('Check your contact details and project answers, then try again.', 400)
   }
 
   const now = new Date().toISOString()
-  await env.DB.prepare(`
+  const insert = await env.DB.prepare(`
     INSERT INTO inquiries (id, name, email, company, project_type, goal, timing, budget, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT (id) DO NOTHING
   `).bind(id, name, email, company, projectType, goal, timing, budget, now, now).run()
+  if (insert.meta.changes === 1 && env.INQUIRY_EMAIL) {
+    context.waitUntil(sendInquiryAlert(env.INQUIRY_EMAIL, projectType))
+  }
   return json({}, 201)
 }
 
@@ -126,7 +149,7 @@ async function updateInquiry(request: Request, env: Env, id: string) {
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, context: ExecutionContext): Promise<Response> {
     const url = new URL(request.url)
     const { pathname } = url
     const adminPage = pathname === '/admin' || pathname === '/admin/'
@@ -152,7 +175,7 @@ export default {
     }
 
     try {
-      if (pathname === '/api/inquiries' && request.method === 'POST') return await saveInquiry(request, env)
+      if (pathname === '/api/inquiries' && request.method === 'POST') return await saveInquiry(request, env, context)
       if (pathname === '/api/admin/inquiries' && request.method === 'GET') {
         const page = Number(url.searchParams.get('page') ?? '1')
         if (!Number.isSafeInteger(page) || page < 1 || page > 100_000) return error('Invalid page.', 400)

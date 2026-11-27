@@ -20,11 +20,11 @@ Open the local Worker URL for the full flow. To test the portal, add `LOCAL_ADMI
 Cloudflare Workers Builds deploys the `teske-sh` Worker from `main`. Prepare the production resources before merging this change.
 
 1. The `DB` binding in `wrangler.jsonc` points to the production `teske-sh-intake` database. Before production deploys with schema changes, run `npx wrangler d1 migrations apply DB --remote`. GitHub checks the build and Worker bundle on pull requests.
-2. Create one Cloudflare Access self-hosted application that protects both `teske.sh/admin` and `teske.sh/api/admin`, including their subpaths. Restrict the allow policy to the intended administrator account. Keep the homepage and `/api/inquiries` public.
-3. Set the Worker variables `ACCESS_ISSUER` to your Cloudflare Access team origin (for example, `https://your-team.cloudflareaccess.com`) and `ACCESS_AUDIENCE` to that application’s audience tag. The Worker verifies the signed Access token for both portal pages and private API calls. Retain these variables across deploys. Do not set `LOCAL_ADMIN_PASSWORD` in production.
+2. The Teske.sh consulting admin application in Cloudflare Access protects `teske.sh/admin` and `teske.sh/api/admin`. Sign in as `daric@teske.sh` using the emailed one-time code. The homepage and `/api/inquiries` remain public.
+3. The Worker uses `ACCESS_ISSUER` and `ACCESS_AUDIENCE` in `wrangler.jsonc` to verify signed Access tokens for the portal page and its API. Update them if the Access application is replaced. Keep `LOCAL_ADMIN_PASSWORD` for local development.
 4. After deploy, confirm a signed-out visitor can submit an inquiry and is challenged on `/admin`. Confirm an authorized administrator can see the inquiry and update its project status.
 
-The Worker uses the existing proxied `teske.sh/*` route. Lead intake is stored and reviewed in the portal. Email alerts are a separate integration.
+The Worker uses the existing proxied `teske.sh/*` route. New production inquiries are saved before the Worker sends an alert from `leads@alerts.teske.sh` to `info@teske.sh`. Verify that destination in Cloudflare Email Service before deploying. Alerts contain the project type and a link to the portal. Preview builds omit the email binding, so test submissions do not send alerts.
 
 ## Pull request previews
 
