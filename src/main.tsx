@@ -2,6 +2,7 @@ import { StrictMode, useState } from 'react'
 import type { FormEvent } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Admin } from './admin'
+import { HomeIntro, InquiryIntro } from './home'
 import { projectTypes, timings } from './intake'
 import './index.css'
 
@@ -35,9 +36,9 @@ function IntakeForm() {
   }
 
   return (
-    <section className="panel" aria-labelledby="inquiry-title">
+    <section className="panel inquiry-panel" aria-labelledby="inquiry-title">
       <h2 id="inquiry-title">Tell me about your project</h2>
-      <p className="muted">An early idea is fine. Start with what you want to improve or build.</p>
+      <p className="muted">Share a bit about what you’re looking for.</p>
       {state === 'sent' ? <p className="success" role="status">Thanks for reaching out. I’ll review your inquiry and follow up by email.</p> : (
         <form onSubmit={submit}>
           <div className="form-grid">
@@ -75,20 +76,22 @@ function App() {
   const admin = location.pathname === '/admin' || location.pathname === '/admin/'
   return (
     <div className="page">
-      <header><a className="wordmark" href="/" aria-label="Teske.sh home">teske<span>.sh</span></a></header>
+      <header className="site-header">
+        <a className="wordmark" href="/" aria-label="Teske.sh home">teske<span>.sh</span></a>
+        {!admin && (
+          <nav className="home-nav" aria-label="Main navigation">
+            <a href="#services">Services</a>
+            <a href="#inquiry">Get in touch</a>
+          </nav>
+        )}
+      </header>
       {admin ? <Admin /> : (
         <main className="landing">
-          <section aria-labelledby="landing-title">
-            <p className="eyebrow">SOFTWARE CONSULTING</p>
-            <h1 id="landing-title">Custom websites, apps, and <span>business software.</span></h1>
-            <p className="intro">I’m Daric Teske. I help businesses build a website, launch a product, or simplify how their team works.</p>
-            <ul className="examples">
-              <li><div><strong>Custom websites</strong><p>Launch a new business site, redesign an existing one, or get help keeping it up to date.</p></div></li>
-              <li><div><strong>Web and mobile apps</strong><p>Give customers an app to book, buy, or track their work.</p></div></li>
-              <li><div><strong>Internal tools and integrations</strong><p>Replace spreadsheets, connect your systems, and reduce manual work.</p></div></li>
-            </ul>
+          <HomeIntro />
+          <section className="home-contact" id="inquiry" aria-label="Start a conversation">
+            <InquiryIntro />
+            <IntakeForm />
           </section>
-          <IntakeForm />
         </main>
       )}
       <footer><span>teske.sh</span><span>Daric Teske</span></footer>
