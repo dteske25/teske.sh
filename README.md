@@ -1,35 +1,37 @@
 # teske.sh
 
-A minimal coming-soon page built with React, TypeScript, and Vite.
+Teske.sh is a software consulting site with a project inquiry form and a private lead and project portal. Inquiries are saved in Cloudflare D1. The portal lists them under **Leads**. Add a project name to a lead to track it under **Projects**. The portal supports lead status, project status, and private notes.
 
 ## Local development
 
-Use Node.js 22.12+ (or a newer supported LTS version).
+Use Node.js 22.12+.
 
 ```sh
 npm ci
-npm run dev
+npm run build
+npx wrangler d1 migrations apply DB --local
+npx wrangler dev
 ```
 
-`npm run build` checks TypeScript and produces `dist/`. `npm run preview` previews that build.
+Open the local Worker URL for the full flow. To test the portal, add `LOCAL_ADMIN_PASSWORD` with a local-only password to the ignored `.dev.vars` file. Open `http://localhost:8787/admin` and enter `admin` and that password. Keep this variable in local development only. `npm run dev` serves the frontend through Vite and is suitable for layout work.
 
-## Deploy with Cloudflare Workers
+## Production setup
 
-The site is deployed as the `teske-sh` Worker at https://teske.sh.
+Cloudflare Workers Builds deploys the `teske-sh` Worker from `main`. Prepare the production resources before merging this change.
 
-Cloudflare Workers Builds is connected to `dteske25/teske.sh`. Pushes to `main` automatically build and deploy with:
+1. The `DB` binding in `wrangler.jsonc` points to the production `teske-sh-intake` database. Before production deploys with schema changes, run `npx wrangler d1 migrations apply DB --remote`. GitHub checks the build and Worker bundle on pull requests.
+2. The Teske.sh consulting admin application in Cloudflare Access protects `teske.sh/admin` and `teske.sh/api/admin`. Sign in as `daric@teske.sh` using the emailed one-time code. The homepage and `/api/inquiries` remain public.
+3. The Worker uses `ACCESS_ISSUER` and `ACCESS_AUDIENCE` in `wrangler.jsonc` to verify signed Access tokens for the portal page and its API. Update them if the Access application is replaced. Keep `LOCAL_ADMIN_PASSWORD` for local development.
+4. After deploy, confirm a signed-out visitor can submit an inquiry and is challenged on `/admin`. Confirm an authorized administrator can see the inquiry and update its project status.
 
-- Production branch: `main`
-- Root directory: repository root
-- Build command: `npm run build`
-- Deploy command: `npx wrangler deploy`
+The Worker uses the existing proxied `teske.sh/*` route. New production inquiries are saved before the Worker sends an alert from `leads@alerts.teske.sh` to `info@teske.sh`. Verify that destination in Cloudflare Email Service before deploying. Alerts contain the project type and a link to the portal. Preview builds omit the email binding, so test submissions do not send alerts.
 
-The checked-in `wrangler.jsonc` serves `dist/` as static assets with SPA fallback. No server entry point or runtime secrets are needed.
+## Pull request previews
 
-The checked-in route `teske.sh/*` sends requests to this Worker. The existing apex A record is proxied through Cloudflare; keep proxying enabled for the route to work. Email DNS records are unchanged.
+Cloudflare Workers Builds runs `npx wrangler preview` for non-production branches. The previews bind to `teske-sh-intake-preview`; apply schema changes there before running a Preview. To target that database explicitly, run from the repository root:
 
-For manual deployment, run `npx wrangler login` once, then `npm run deploy`. Routine updates deploy automatically from GitHub; Wrangler is available for manual deployments.
+```sh
+npx wrangler d1 migrations apply teske-sh-intake-preview --config wrangler.preview-migrations.jsonc --remote
+```
 
-If using Cloudflare Pages instead, choose build command `npm run build` and output directory `dist`. Pages handles SPA fallback when no top-level `404.html` exists. Add `teske.sh` in the project's Custom domains settings.
-
-See the [Cloudflare SPA documentation](https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/).
+Use sample inquiry details in previews. Production sign-in settings are configured separately, so preview deployments leave the admin portal closed unless Preview-specific access is set up.
