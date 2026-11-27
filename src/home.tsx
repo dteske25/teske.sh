@@ -21,9 +21,9 @@ export function HomeIntro() {
     <>
       <section className="home-hero" aria-labelledby="landing-title">
         <div className="hero-copy">
-          <p className="eyebrow">Independent software consulting</p>
-          <h1 id="landing-title">A better website.<br /><span>Software that fits.</span></h1>
-          <p className="intro">I’m Daric Teske. I build websites, web and mobile apps, and internal tools for businesses that have outgrown the way they do things today.</p>
+          <p className="eyebrow">Websites, apps, and business tools</p>
+          <h1 id="landing-title">AI gets you started.<br /><span>I get it ready for business.</span></h1>
+          <p className="intro">I’m Daric Teske. I build software you can count on today and easily update as you grow.</p>
           <div className="hero-actions">
             <a className="home-button" href="#inquiry">Tell me what you need <span aria-hidden="true">↗</span></a>
             <a className="hero-secondary" href="#services">Explore services</a>
@@ -65,7 +65,7 @@ export function InquiryIntro() {
   return (
     <div className="inquiry-intro">
       <h2>Let’s start with a conversation.</h2>
-      <p>Tell me what you’re trying to do and what’s getting in the way. A few sentences are plenty.</p>
+      <p>Already built something with AI? Show me what you have. Starting from an idea? A few sentences are plenty.</p>
       <p>I’ll follow up by email. If it sounds like a fit, we’ll talk through what you need, what it might cost, and where to start.</p>
     </div>
   )
